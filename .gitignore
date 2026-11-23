@@ -1,0 +1,38 @@
+# maphub: PUBLIC. Code and configuration log on main; the daily tables on the
+# tables branch (main merged in, plus tables/, which the host adds with git add -f).
+
+# The daily tables: only the tables branch holds them
+tables/
+
+# Local settings, such as a Claude API key for --via api (none is kept now).
+.env
+.env.*
+
+# Portfolios in a private repository of their own, checked out inside this one;
+# a MapHub that keeps them as a folder of this repository removes this line
+maphub-portfolios/
+
+# Saved papers and scores for resuming runs
+.work/
+
+# Local caches: arXiv OAI-PMH records for rebuilding past listings, the driver's log, scoring trials
+.cache/
+
+# Leftovers from interrupted writes (files are written to .tmp, then renamed)
+*.tmp
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Operating system and editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+*:Zone.Identifier
+*.swp
+*~
+.vscode/
+.idea/

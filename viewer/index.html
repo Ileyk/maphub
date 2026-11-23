@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MapHub: MIDAS arXiv Preprint Hub</title>
+  <meta name="description" content="MIDAS arXiv Preprint Hub: daily heatmaps of new astro-ph and cs.AI papers scored for each participant.">
+  <!-- The "dev" version below becomes the commit at deploy (pages.yml), so a reload fetches new files -->
+  <link rel="icon" href="favicon.svg?v=dev" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png?v=dev" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=dev">
+  <link rel="stylesheet" href="viewer.css?v=dev">
+  <script type="module" src="viewer.js?v=dev"></script>
+</head>
+<body>
+  <header class="bar">
+    <h1><a id="home" href="./">MapHub</a> <span class="fullname">MIDAS arXiv Preprint Hub</span></h1>
+    <nav class="dates" aria-label="Announcement dates">
+      <button id="prev" type="button" aria-label="Previous day">‹</button>
+      <input id="date" type="text" inputmode="numeric" placeholder="YYYY-MM-DD" maxlength="10" size="10"
+        aria-label="Announcement date" title="Type a date and press Enter, or open the calendar">
+      <button id="cal" type="button" aria-label="Calendar" aria-expanded="false" aria-controls="calendar">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="12" rx="1.5" fill="none" stroke="currentColor"/><path d="M1.5 6h13M5 1v3M11 1v3" stroke="currentColor"/></svg>
+      </button>
+      <button id="next" type="button" aria-label="Next day">›</button>
+      <div id="calendar" class="calendar" role="dialog" aria-label="Pick an announcement date" hidden></div>
+      <a id="latest" href="./">Latest</a>
+      <a id="top" href="./top">Top papers</a>
+    </nav>
+  </header>
+
+  <main>
+    <details class="about">
+      <summary>About MapHub</summary>
+      <p>MapHub ranks each day's new arXiv papers in astrophysics (astro-ph) and artificial intelligence (cs.AI) for a small community of researchers and groups (five as of October 2026), and shows whose research each paper matches best: a starting point for finding someone to ask about it.</p>
+      <p>Unlike tools that rank papers for one reader in private, MapHub scores every paper for every participant and shows the scores together; its profiles are portfolios that participants write and correct themselves; and its scores are public, with each table's commit recording the portfolio version, settings and code behind it. On a typical day so far, about 6% of the new astro-ph papers score 30 or more for each participant, on average, a handful worth reading out of some ninety.</p>
+      <ul>
+        <li><strong>Rows</strong> are the papers announced that day; <strong>columns</strong> are participants, shown by pseudonym.</li>
+        <li><strong>Each cell</strong> is a relevance score from 0 to 100. A language model (Claude) assigns it by reading the paper's title, authors and abstract against the participant's research portfolio: 100 = they would have written it, 80 = coauthored it, 60 = would cite it, 30 = may broaden their view, 0 = worth a glance at the title, but not the abstract.</li>
+        <li><strong>Select a participant</strong> (column name) to see the papers most relevant to them, and the participants with the most similar interests. <strong>Select a paper</strong> (its title) to see who it matters to most: a starting point for finding someone to ask about it. Similarity, r, is the correlation of that day's scores.</li>
+        <li><strong>Top papers</strong> lists one participant's highest-scored papers over a range of listing dates (by default the past month, top 50), optionally with other participants' scores for the same papers beside; each listing date opens that day's heatmap.</li>
+        <li>Hover over a cell for its score, or over an arXiv number for the paper's link. The arrows, the date box and the calendar move between days, keeping a selected participant; in the calendar, days with a table are highlighted, and weekends and holidays have no listing.</li>
+      </ul>
+      <p><strong>Participants</strong> are researchers and research groups who have each provided a short research portfolio describing their work; the scores come from these portfolios. Columns carry pseudonyms rather than names. Scores are public and stay in the tables after a participant pauses or leaves; their column can then be shown greyed out or hidden from this page. Pseudonyms are not anonymity, and portfolios are sent to the language model's provider: see <a href="https://github.com/kailicao/maphub-public#what-participants-agree-to">what participants agree to</a>. If you would like to join, please email <a href="mailto:kailicao@umich.edu">kailicao@umich.edu</a>.</p>
+      <p>MapHub is a team project (a &ldquo;carpentry&rdquo;) of the <a href="https://midas.umich.edu/training/postdoctoral-programs/schmidt-ai-in-science-postdoctoral-fellowship/">Eric and Wendy Schmidt AI in Science Postdoctoral Fellowship</a> at the <a href="https://midas.umich.edu/">Michigan Institute for Data and AI in Society (MIDAS)</a>, led by <a href="https://kailicao.github.io/">Kaili Cao</a> with teammates Kyle Heyblom, Eva Albalghiti and Dimitrios Simatos. Its code and daily tables are public on <a href="https://github.com/kailicao/maphub-public">GitHub</a>; titles and authors come from <a href="https://datacite.org/">DataCite</a>, which holds arXiv's DOI records.</p>
+      <p><strong>MapHub is under development.</strong> Its scores come from a language model and can be wrong: treat them as pointers to papers and people, not as judgments of anyone's work. Questions and suggestions are welcome: <a href="mailto:kailicao@umich.edu">kailicao@umich.edu</a>.</p>
+    </details>
+    <p id="status" class="status" role="status">Loading…</p>
+    <noscript><p class="status">This viewer needs JavaScript. The daily tables it shows are public in the repository's <a href="https://github.com/kailicao/maphub-public/tree/tables">tables branch</a>, and how MapHub works is in its <a href="https://github.com/kailicao/maphub-public#readme">README</a>.</p></noscript>
+    <div class="legend" id="legend" hidden>
+      <span class="legend-label">Relevance</span>
+      <div class="legend-scale">
+        <div class="legend-bar" id="legend-bar"></div>
+        <div class="legend-ticks">
+          <span style="left:0%">0</span><span style="left:30%">30</span><span style="left:60%">60</span><span style="left:80%">80</span><span style="left:100%">100</span>
+        </div>
+      </div>
+    </div>
+    <div class="scroll" id="scroll" hidden>
+      <table id="heatmap"></table>
+    </div>
+  </main>
+
+  <footer class="foot">
+    Under development · Scores are AI-generated and may be inaccurate · <a href="mailto:kailicao@umich.edu">Contact</a> · Built with <a href="https://github.com/kailicao/maphub-public">MapHub</a>
+  </footer>
+
+  <div id="tip" class="tip" role="tooltip" hidden></div>
+</body>
+</html>
